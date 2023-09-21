@@ -42,7 +42,7 @@
    
           <div class="carousel-item active bn1">
             <h3>Home</h3>
-            {{filtrarPorSearch}}
+            <!-- {{filtrarPorSearch}} -->
           
         </div>
       </div>
@@ -63,7 +63,7 @@
   <main class="d-flex flex-column flex-grow-1">
   <div class="check-nav">
     <!-- //check -->
-    <label v-for="categoria of categorias"><input type="checkbox" :value="categoria" :id="categoria" v-model="checked" v-on:change="filtrarXCat">{{categoria}}</label>
+    <label v-for="categoria of categorias"><input type="checkbox" :value="categoria" :id="categoria" v-model="checked" v-on:change="filtroCruzado">{{categoria}}</label>
 
 
     <div class="checked">
@@ -71,8 +71,8 @@
     </div>
       <div class="d-flex fondoForm" role="search">
         <input class="form-control me-2 anchoInput" type="search" placeholder="search ..."
-            aria-label="Search" v-model="inputValue">
-        <label class="btn"><i class="bi-search" id="lupa" v-on:click:="filtroCruzado"></i></label>
+            aria-label="Search" v-model="inputValue" @keyup="filtroCruzado">
+        <!-- <label class="btn"><i class="bi-search" id="lupa" v-on:click:="filtroCruzado"></i></label> -->
     </div>
   </div>
   <!-- article1 -->

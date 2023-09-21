@@ -52,9 +52,12 @@ created(){
       })
 
      
-      console.log(this.ordenarLista(this.porcentajes,"porcentaje"))
-
+      this.porcentajes = this.ordenarLista(this.porcentajes,"porcentaje")
+      console.table(this.porcentajes)
      
+        this.highest = this.porcentajes[0]
+        
+        this.lowest = this.porcentajes[this.porcentajes.length - 1]
         
 
     })
@@ -62,7 +65,7 @@ created(){
 
     },
 
-    method:{
+    methods:{
 
         sinRepetidos(lista){
            return  Array.from(new Set(lista)) 

@@ -40,7 +40,7 @@ createApp({
 
       filtroInput(eventos,inputSearchvalue){
        return eventos.filter(evento => evento.name.toLowerCase().includes(inputSearchvalue.toLowerCase()))
-
+      
       },
 
       filtroCheck(eventos,catSeleccionadas){
@@ -54,8 +54,8 @@ createApp({
       filtroCruzado(){
         const filtradoXSearch = this.filtroInput(this.eventos,this.inputValue)
         const filtradoXCat = this.filtroCheck(filtradoXSearch, this.checked)
-
         this.filtrados = filtradoXCat
+
       }
 
   },
@@ -72,6 +72,6 @@ createApp({
  
     // }
 
-  // }
+ //}
 
 }).mount('#app')
