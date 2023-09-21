@@ -78,15 +78,18 @@
   <!-- article1 -->
    <section class="eventos">
        
-    <article class="cart" v-for="evento of filtrados">
+    <article v-if="filtrados.length > 0" class="cart" v-for="evento of filtrados">
+    
             <img :src="evento.image" :alt="evento.name">
             <h2 class="titulo-dc">{{evento.name}}</h2>
             <p>{{evento.description}}</p>
             <div class="pre-anc">
             <h2>{{evento.price}}</h2>
-            <a :href="`./details.html?ametro=${evento._id}`">Details</a>
+            <a :href="`./details.html?parametro=${evento._id}`">Details</a>
             </div>
         </article>
+
+        <h4 id="error401"  v-else  class="">No results</h4>
   
       
     
@@ -112,6 +115,6 @@
   crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script  src="./assets/javaScript/vue_home.js"></script>
-
+ 
   </body>
 </html>

@@ -68,9 +68,9 @@
                     <td>Events with larger capacity</td>
                 </tr>
                 <tr>
-                    <td>{{highest.name}} {{lowest.porcentaje}}</td>
-                    <td>{{lowest.name}} {{lowest.porcentaje}}</td>
-                    <td></td>
+                    <td>{{highest.name}} % {{highest.porcentaje}}</td>
+                    <td>{{lowest.name}} % {{lowest.porcentaje}}</td>
+                    <td>{{capacityL.name}} {{capacityL.capacity}}</td>
                 </tr>
 
                 <tr >
@@ -83,6 +83,12 @@
                     <td>Revenues</td>
                     <td>Percentage of assistance</td>
                 </tr>
+
+                <tr v-for="celda of tablaU">
+                    <td>{{celda.categoria}}</td>
+                    <td>{{celda.ganancia}} %</td>
+                    <td>{{celda.porcentaje}} %</td>
+                </tr>
             </tbody>
             <tfoot class="past-statistics">
                 <tr>
@@ -93,6 +99,12 @@
                     <td>Revenues</td>
                     <td>Percentage of assistance</td>
                 </tr>
+                <tr v-for="celda of tablaP">
+                  <td>{{celda.categoria}}</td>
+                  <td>{{celda.ganancia}} %</td>
+                  <td>{{celda.porcentaje}} %</td>
+              </tr>
+
             
             </tfoot>
         </table>

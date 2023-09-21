@@ -10,8 +10,19 @@
     --borde:#3742fa;
 }
 
+#error401{
+    padding: 5rem;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 30px;
+
+}
+
 .logo{
     height: 5rem;
+}
+.img-detalle{
+    object-fit: cover;
 }
 
 h1{

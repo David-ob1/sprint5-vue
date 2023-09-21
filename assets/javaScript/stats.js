@@ -8,11 +8,11 @@ createApp({
       return {
        eventos:[],
        porcentajes:[],
-       capacity:[],
+       capacityL:{},
        categorias:[],
-       revenuesU: [],
        assistance:[],
-       revenuesP:[],
+       tablaU:{},
+       tablaP:{},
        categoriasP:[],
        categoriasF:[],
        highest:{},
@@ -30,8 +30,8 @@ created(){
 
         //separacion x fechas
        let eventosPasados = this.eventos.filter(item => item.date < diaHoy)
-       let theventosFuturos = this.eventos.filter(item => item.date >= diaHoy)
-
+       let eventosFuturos = this.eventos.filter(item => item.date >= diaHoy)
+      console.log(eventosFuturos)
        
         //categorias
     //   this.categorias = sinRepetidos()
@@ -56,12 +56,50 @@ created(){
       console.table(this.porcentajes)
      
         this.highest = this.porcentajes[0]
-        
         this.lowest = this.porcentajes[this.porcentajes.length - 1]
         
+      //capacidad 
+        let capacidad = this.ordenarLista(this.eventos,"capacity")
+        console.table(capacidad)
+
+        this.capacityL = capacidad[0]
+
+        //categorias
+        let catF = eventosFuturos.map(item => item["category"])
+        let catP = eventosPasados.map(item => item["category"])
+    
+
+      this.categoriasF = this.sinRepetidos(catF)
+      let arrayAux = []
+   
+      for (let categoria of this.categoriasF){
+      let pertenece = this.gananciaHTML(eventosFuturos,categoria,"estimate")
+        console.table(pertenece)
+        arrayAux.push(pertenece) 
+      }
+
+      this.tablaU = arrayAux
+
+
+      
+      this.categoriasP = this.sinRepetidos(catP)
+      let arrayAuxP = []
+   
+      for (let categoria of this.categoriasF){
+      let pertenece = this.gananciaHTML(eventosPasados,categoria,"assistance")
+        console.table(pertenece)
+        arrayAuxP.push(pertenece) 
+      }
+
+      this.tablaP = arrayAuxP
+
+
 
     })
 
+   
+
+   
 
     },
 
@@ -76,230 +114,75 @@ created(){
           aux.sort((a,b) =>  b[propiedad] - a[propiedad])
           return aux
 
+        },
+
+         gananciaHTML(objeto,categoria,POF){
+          let eventosCorrespondientes =  this.filtrarXCat(objeto,categoria)
+          console.table(eventosCorrespondientes)
+          console.table(POF)
+          let gananciaEinfo = this.calcularObjeto(eventosCorrespondientes,POF)
+          // console.log()
+          return gananciaEinfo
+         
+
+           
+      },
+
+        calcularObjeto (objetos,momento){
+        console.log(momento)
+       
+         let ganancia = 0 
+         let assistance = 0
+         let capacity = 0
+         let categoria =""
+         console.log(objetos)
+
+          
+
+        for (let evento of objetos){
+            categoria = evento.category
+            ganancia += (evento.price * evento[momento])
+            console.log(ganancia)
+            assistance  += evento[momento]
+            console.log(assistance) 
+            capacity += evento.capacity 
+            console.log(capacity)
         }
-
-
-
-        // sacarCategorias(lista){
-        //     for( item  of lista){
-                
-        //     }
-
-
-        // }
-
         
+        let percentage = (assistance / capacity * 100).toFixed(2)
+     
+         
+         let datos ={
+             categoria: categoria,
+             ganancia:ganancia,
+             porcentaje: percentage
 
+         }
+
+         console.table(datos)
+         return datos
+     },
+
+     filtrarXCat(eventos,catSeleccionadas){
+      if(catSeleccionadas.length == 0){
+        return eventos
+      }
+      let filtrado = eventos.filter((evento) =>  catSeleccionadas.includes(evento["category"]))
+      return filtrado
     }
+
+
+
+     }
+      
+    
+
+
+    
+
+    
 
 
 
 
   }).mount('#app')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import {filaTabla1,filaTabla2Y3,agregarHtml, sinRepetidos, filtrarXCat} from "./modules/functions.js"
- 
-// const Api = "https://mindhub-xj03.onrender.com/api/amazing" 
-
-//     //primer tabla
-//     const Tabla1location = document.querySelector('.statistics-info')
-
-
-// fetch(Api)
-//     .then(event=> event.json())
-//         .then(datos =>{
-//             let data = datos
-//             const diaHoy = data.currentDate
-//             const eventos = data.events
-            
-//             // tabla 1
-//             const eventosPasados = eventos.filter(item => item.date < diaHoy)
-         
-//          let porcentaje =  eventosPasados.map((item) =>{
-//                let nombre = item.name
-//                let capacidad = item.capacity 
-//                let assistance = item.assistance
-//                let promedio =  assistance / capacidad * 100
-           
-//                 let evento = {
-//                     name:nombre,
-//                     porcentaje: promedio    
-//                 }
-                
-//                 console.log(evento)    
-//                return evento
-//             })
-
-//            //toFixed(2)
-//             console.log(porcentaje)
-//      //porcentaje
-//             let ordenPorcentaje = ordenarPorcentaje(porcentaje)
-//             console.table(ordenPorcentaje)
-//             let highest = ordenPorcentaje[0]
-//             let lowest = ordenPorcentaje[ordenPorcentaje.length - 1]
-
-//                 console.log(ordenPorcentaje)
-//                 console.log(highest)
-//                 console.log(lowest)
-
-//      //capacidad
-
-//               let eventoMayorCapacidad =  ordenarXCapacidad(eventos)
-
-//               console.log(eventoMayorCapacidad)
-
-//            agregarHtml(filaTabla1(highest,lowest,eventoMayorCapacidad), Tabla1location)
-        
-
-//              //tabla 2
-        
-//         const eventosFuturos = eventos.filter(item => item.date >= diaHoy)
-//          const upcomingStatistics = document.querySelector(".statistics-by-category")
-//          //todas las categorias
-//             let categoriasF = sinRepetidos(eventosFuturos,"category")
-            
-//         //crear array con los nombres de las categorias
-            
-//             for (let categoria of categoriasF){
-//              let pertenece = gananciaHTML(eventosFuturos,categoria,"estimate")
-//              let etiquetasHtml = filaTabla2Y3(categoria,pertenece)
-//              agregarHtml(etiquetasHtml,upcomingStatistics)
-
-//                 console.table(pertenece)
-//                 console.table(etiquetasHtml)
-//             }
-
-//             //tabla 3
-//            // const eventosPasados = eventos.filter(item => item.date < diaHoy)
-//            let categoriasP = sinRepetidos(eventosPasados,"category")
-//             const PastStContainer = document.querySelector(".past-statistics")
-            
-
-//            for (let categoria of categoriasP){
-//             let pertenece = gananciaHTML(eventosPasados,categoria,"assistance")
-//             let etiquetasHtml = filaTabla2Y3(categoria,pertenece)
-//             console.log(etiquetasHtml)
-            
-//               agregarHtml(etiquetasHtml,PastStContainer)
-//            }
-
-
-//              //funciones
-//         // function mostrarClaves (array,propiedad){
-//         //     console.log(array[0])
-//         //   let aux = []
-//         //     for (let item of array) {
-                
-//         //         aux.push(item[propiedad])
-//         //     }
-
-//         //     return aux
-//         //    }
-
-//         function ordenarPorcentaje(array){
-//         let aux = Array.from(array)
-//             aux.sort((a,b) =>{return  b.porcentaje - a.porcentaje})
-            
-//             return aux
-//         }
-
-
-//       //  function ordenarNumeros(a,b) {return  b.porcentaje - a.porcentaje}// descendente
-
-
-//         function ordenarXCapacidad(arrayEventos){
-//             let aux = Array.from(arrayEventos)
-//                 aux.sort((a,b) =>{return b.capacity - a.capacity})
-
-//                 return aux[0]
-
-//         }
-
-//         function gananciaHTML(objeto,categoria,POF){
-//             let eventosCorrespondientes =  filtrarXCat(objeto,categoria)
-//            // console.table(eventosCorrespondientes)
-//             let gananciaEinfo = calcularObjeto (eventosCorrespondientes,POF)
-         
-//             return gananciaEinfo
-
-
-//           // console.log(gananciaEvento)
-          
-//         }
-
-//         function calcularObjeto (objetos,momento){
-//             let ganancia = 0 
-//             let assistance = 0
-//             let capacity = 0
-//             console.log(objetos)
-//             for (let evento of objetos){
-//                 ///   console.table (evento.price + " y " + evento.estimate)
-//                 ganancia += (evento.price * evento[momento])
-//                 assistance  += evento[momento]
-//                 capacity += evento.capacity
-
-                
-//             }
-            
-
-//                 let percentage = assistance / capacity * 100
-//                // console.log(percentage)
-                
-//                 let datos ={
-//                     ganancia:ganancia,
-//                     porcentaje: percentage
-
-//                 }
-//                 return datos
-//             }
-
-//         })//fin then
-    
-//         //obtener porcentaje y el nombre del evento
-//     .catch()    
-
-

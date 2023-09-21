@@ -1,35 +1,48 @@
- import { generarHtml } from "./modules/functions.js"
-
-//capturar el objeto
-const API_Eventos = "https://mindhub-xj03.onrender.com/api/amazing"
-let parametro = location.search
-
-// objeto url 
-let params = new URLSearchParams(parametro)
-console.log(params)
-
-let idEvento = params.get("parametro")
-    console.log(idEvento)
-
-    //Dom 
-
- let contenedorMain = document.getElementById("contenedorDetalles")
+const { createApp } = Vue
 
 
-    fetch(API_Eventos) //devuelve una promesa
+createApp({
 
-    .then(respuesta => respuesta.json())
-        .then( data =>{
+    data(){
+        return{
+            eventos:[],
+            evento:{},
 
-            console.log(data)
+        }
 
-            let evento = data.events.find(evento => evento._id  == idEvento)
-            console.log(evento)
+        
+    },
 
-            generarHtml(contenedorMain,evento)
+    created(){
+            fetch("https://mindhub-xj03.onrender.com/api/amazing") //devuelve una promesa
+            .then(respuesta => respuesta.json())
+            .then( data =>{
+                    console.log(data)
+                    this.eventos = data.events
+                    
+
+
+            let parametro = location.search
+            let params = new URLSearchParams(parametro)
+            console.log(params)
+
+            let idEvento = params.get("parametro")
+            console.log(idEvento)
+
+            this.evento = this.eventos.find(evento => evento._id  == idEvento)
+                console.log(this.evento)
 
         })
     .catch()
+
+    }
+
+
+
+}).mount('#app')
+
+//capturar el objeto
+
 
 
 

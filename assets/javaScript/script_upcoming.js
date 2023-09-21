@@ -1,69 +1,82 @@
-import {PrepararCheck,filtrarXnombre,filtrarXCat,imprimirHtml,arrayCart} from "./modules/functions.js"  
+const { createApp } = Vue 
 
-const API_Eventos = "https://mindhub-xj03.onrender.com/api/amazing"
+createApp({
 
-fetch(API_Eventos)
-  .then(response => response.json())
-    .then(datos =>{
-    let  data = datos
-      const diaHoy = data.currentDate
-      // const totalEventos = data.events
-      // console.table(totalEventos)
-
-        //filtando
-      const totalEventos = data.events.filter(event => event.date > diaHoy)
-      console.table(totalEventos)
-
+  //aca se crean las propiedades reactivas
+  data() {
+    return {
+      message: 'Hello Vue!',
+      eventos:[],
+      inputValue: "",
+      filtrados: [],
+      categorias:[],
+      checked: []
+    }
+  },
+  created(){  
       
-    imprimirHtml(arrayCart(totalEventos),contenedorEv)
-    imprimirHtml(PrepararCheck(totalEventos), contenedorCheck)
+    fetch("https://mindhub-xj03.onrender.com/api/amazing")
+      .then(respuesta =>respuesta.json())
+      .then(data => {
+        this.diaHoy = data.currentDate
+        this.eventos = data.events.filter(item => item.date >= this.diaHoy)
+        console.log(this.eventos)
+        
+        //para mostrarlos todos en primera vuelta
+        this.filtrados = this.eventos
 
-    contenedorCheck.addEventListener("change",()=>{
-      let checked = document.querySelectorAll("input[type=checkbox]:checked")
-      const checkedValues = Array.from(checked).map( checkbox => checkbox.value)
-      console.log(checkedValues)
+        let todasCat = this.eventos.map( evento => evento.category)
+         console.table(todasCat)
 
-      let catUsuario = filtrarXCat(totalEventos,checkedValues)
-      let buscarEvento = buscar.value
-      let encontrado = filtrarXnombre(catUsuario,buscarEvento)
-      console.table(encontrado)
-      imprimirHtml(arrayCart(encontrado),contenedorEv)
-      
-  })
-
-      lupita.addEventListener("click",()=>{
-        let checked = document.querySelectorAll("input[type=checkbox]:checked")
-        const checkedValues = Array.from(checked).map( checkbox => checkbox.value)
-        console.log(checkedValues)
-
-        let catUsuario = filtrarXCat(totalEventos,checkedValues)
-        let buscarEvento = buscar.value
-        let encontrado = filtrarXnombre(catUsuario,buscarEvento)
-        console.log(encontrado)
-        imprimirHtml(arrayCart(encontrado),contenedorEv)
+        this.categorias = this.sinRepetidos(todasCat)
+        
+        console.log(this.categorias)
       })
-    
-      return data
-    })
+      .catch(error => console.log(error))
 
+},  
+  methods:{
+      sinRepetidos(lista){
+          return Array.from(new Set (lista))
+      },
 
-  .catch(err => alert("error"))
+      filtroInput(eventos,inputSearchvalue){
+       return eventos.filter(evento => evento.name.toLowerCase().includes(inputSearchvalue.toLowerCase()))
+      
+      },
 
+      filtroCheck(eventos,catSeleccionadas){
+        if(catSeleccionadas.length == 0){
+          return eventos
+        }
+        return eventos.filter((evento) =>  catSeleccionadas.includes(evento["category"]))
+         
+      },
+      
+      filtroCruzado(){
+        const filtradoXSearch = this.filtroInput(this.eventos,this.inputValue)
+        const filtradoXCat = this.filtroCheck(filtradoXSearch, this.checked)
+        this.filtrados = filtradoXCat
 
+      }
 
-  
+  },
 
-const contenedorEv = document.querySelector(".eventos")
-const contenedorCheck = document.querySelector(".checked")
-const lupita = document.getElementById("lupa")
-const buscar = document.getElementById("busqueda")
-  
+  // computed:{
+  //   filtrarPorSearch(){
+  //     this.filtrados = this.eventos.filter(evento => evento.name.toLowerCase().includes(this.inputValue.toLowerCase()))
+   
+  //   },
 
-
-  
-
+    // filtrarXCat(){
+    //   this.checked = this.filtrados.filter(evento => evento) 
+    //   // let filtrado = eventos.filter((evento) =>  catSeleccionadas.includes(evento["category"]))
  
+    // }
 
+ //}
+
+}).mount('#app')
 
 
   
